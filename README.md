@@ -1,81 +1,70 @@
-# Cliff Walking：Q-learning vs SARSA
 
-## 一、作業目的
 
-本作業旨在實作並比較兩種經典強化學習演算法：
+# 📌 Cliff Walking：Q-learning vs SARSA
+
+## 一、實驗目的
+
+本實驗比較兩種強化學習方法在 Cliff Walking 環境中的表現：
 
 * Q-learning（Off-policy）
 * SARSA（On-policy）
 
-透過相同環境與參數設定，分析兩者在學習過程中的：
+主要分析以下三個面向：
 
-* 收斂速度
-* 策略行為
-* 穩定性差異
-
----
-
-## 二、環境描述（Cliff Walking）
-
-本實驗採用 Gridworld 環境（4 × 12）：
-
-* 起點（Start）：左下角
-* 終點（Goal）：右下角
-* 懸崖（Cliff）：底部中間區域
-
-### 獎勵機制：
-
-* 每移動一步：**-1**
-* 掉入懸崖：**-100**，並回到起點
-* 到達終點：**0（回合結束）**
+* 學習收斂速度
+* 策略行為差異（冒險 vs 保守）
+* 學習穩定性
 
 ---
 
-## 三、方法說明
+## 二、實驗環境與設定
 
-### 1️⃣ Q-learning（Off-policy）
+### 📍 Cliff Walking 環境
 
-更新公式：
+* Gridworld 大小：4 × 12
+* 起點：左下角
+* 終點：右下角
+* 懸崖區：底部中間區域
 
-[
-Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma \max_a Q(s',a) - Q(s,a) \right]
-]
+### 🎯 Reward 設計
 
-* 使用「最佳下一步」來更新
-* 偏向學習**最優策略（貪婪）**
-* 可能較冒險（貼近懸崖）
-
----
-
-### 2️⃣ SARSA（On-policy）
-
-更新公式：
-
-[
-Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma Q(s',a') - Q(s,a) \right]
-]
-
-* 使用「實際採取的下一步」
-* 考慮 exploration（ε-greedy）
-* 策略較保守
+| 行為   | Reward     |
+| ---- | ---------- |
+| 每一步  | -1         |
+| 掉入懸崖 | -100（回到起點） |
+| 抵達終點 | 0          |
 
 ---
 
-### 3️⃣ 參數設定
+### ⚙️ 訓練參數
 
 | 參數       | 數值      |
 | -------- | ------- |
-| α（學習率）   | 0.1     |
-| γ（折扣因子）  | 0.9     |
-| ε（探索率）   | 0.1     |
+| 學習率 α    | 0.1     |
+| 折扣因子 γ   | 0.9     |
+| 探索率 ε    | 0.1     |
 | Episodes | 500     |
 | Runs     | 50（取平均） |
 
 ---
 
-## 四、實驗結果
+## 三、訓練過程
 
-### 1️⃣ 學習曲線（Learning Curve）
+在實驗中：
+
+* Q-learning 與 SARSA 使用相同環境
+* 使用 **ε-greedy 策略**
+* 保證探索條件一致（公平比較）
+* 每回合紀錄 total reward
+* 重複 50 次取平均結果
+
+---
+
+## 四、結果分析
+
+---
+
+## 1️⃣ 學習表現（Learning Curve）
 
 輸出圖：
 
@@ -83,18 +72,25 @@ Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma Q(s',a') - Q(s,a) \right]
 learning_curve.png
 ```
 
-觀察結果：
+### 📊 觀察結果
 
-* 初期 reward 非常低（約 -100），因為頻繁掉入 cliff
-* 隨著訓練進行，reward 快速上升
-* 最終：
+* 初期 reward 非常低（頻繁掉入 cliff）
+* 隨訓練逐漸改善並收斂
+* 最終結果：
 
-  * SARSA 約落在 **-20 ~ -30**
-  * Q-learning 約落在 **-40 ~ -50**
+| 方法         | 表現             |
+| ---------- | -------------- |
+| SARSA      | reward 較高、較穩定  |
+| Q-learning | reward 較低、波動較大 |
+
+### 📌 收斂速度
+
+* Q-learning：收斂較快
+* SARSA：收斂較慢但穩定
 
 ---
 
-### 2️⃣ 策略比較（Policy）
+## 2️⃣ 策略行為分析（Policy）
 
 輸出圖：
 
@@ -103,85 +99,127 @@ q_policy.png
 sarsa_policy.png
 ```
 
-#### Q-learning：
+### 🧠 Q-learning 行為
 
-* 學習到**最短路徑**
-* 會貼著 cliff 行走
-* 風險高（容易掉落）
+* 傾向走最短路徑
+* 經常貼近 cliff
+* 高風險策略（容易掉落）
 
-#### SARSA：
+👉 特性：
 
-* 學習到**較安全路徑**
-* 遠離 cliff
-* 雖然路徑較長，但更穩定
-
----
-
-### 3️⃣ 穩定性分析
-
-| 方法         | 特性       |
-| ---------- | -------- |
-| Q-learning | 波動較大、較激進 |
-| SARSA      | 較平穩、較保守  |
-
-原因：
-
-* SARSA 把 ε-greedy 的隨機性納入學習
-* Q-learning 假設未來永遠選最佳動作（過於理想）
+* 冒險
+* 追求最優解
 
 ---
 
-## 五、重要觀察（重點！老師很愛看這段）
+### 🧠 SARSA 行為
 
-1. **Q-learning 是理想化策略**
+* 明顯避開 cliff
+* 路徑較安全但較長
+* 穩定性較高
 
-   * 學的是「最優解」
-   * 但實際執行可能危險
+👉 特性：
 
-2. **SARSA 是實際策略**
+* 保守
+* 考慮探索風險
 
-   * 學的是「會探索的策略」
-   * 因此更安全
+---
 
-3. **Cliff Walking 是經典對比例子**
+## 3️⃣ 穩定性分析
 
-   * 完美展示 On-policy vs Off-policy 差異
+| 方法         | 穩定性 | 波動 |
+| ---------- | --- | -- |
+| Q-learning | 較差  | 高  |
+| SARSA      | 較好  | 低  |
+
+### 📌 原因分析
+
+* Q-learning 假設未來永遠採取最佳行為
+* SARSA 會考慮 ε-greedy 探索帶來的不確定性
+
+👉 因此 SARSA 更貼近「實際行為」
+
+---
+
+## 五、理論比較與討論
+
+### 🔵 Q-learning（Off-policy）
+
+* 學習目標是「理論上的最佳策略」
+* 更新時不考慮實際探索行為
+* 收斂較快
+* 但可能產生危險行為
+
+---
+
+### 🟢 SARSA（On-policy）
+
+* 學習「實際執行的策略」
+* 更新包含探索行為影響
+* 收斂較穩定
+* 更安全可靠
+
+---
+
+### 📌 Cliff Walking 的意義
+
+此環境清楚展示：
+
+* Off-policy vs On-policy 差異
+* 風險敏感學習（risk-aware learning）
+* 探索策略對結果的影響
 
 ---
 
 ## 六、結論
 
-* Q-learning 收斂較快，但策略較冒險
-* SARSA 收斂較穩定，策略較安全
-* 在高風險環境中：
-  👉 SARSA 通常表現較好
+### 📊 實驗總結
+
+| 項目   | Q-learning | SARSA |
+| ---- | ---------- | ----- |
+| 收斂速度 | 較快         | 較慢    |
+| 穩定性  | 較差         | 較好    |
+| 策略風險 | 高          | 低     |
+| 路徑   | 最短但危險      | 較安全   |
 
 ---
 
-## 七、如何執行
+### 📌 最終結論
+
+* **收斂最快：Q-learning**
+* **最穩定：SARSA**
+
+---
+
+### 📍 適用情境
+
+#### Q-learning 適用於：
+
+* 環境可安全探索
+* 追求最優策略
+* 模擬或理論問題
+
+#### SARSA 適用於：
+
+* 高風險環境
+* 真實世界應用（例如機器人控制）
+* 需要穩定行為
+
+---
+
+## 七、執行方式
 
 ```bash
 python main.py
 ```
 
-輸出：
-
-* learning_curve.png
-* q_policy.png
-* sarsa_policy.png
-
-```
-
 ---
 
-## 八、程式架構
+## 八、輸出結果
 
-- `CliffWalkingEnv`：環境
-- `QLearningAgent`：Q-learning
-- `SARSAAgent`：SARSA
-- `run_experiment()`：多次平均
-- `visualize_policy()`：策略視覺化
+執行後會產生：
 
+* learning_curve.png（學習曲線）
+* q_policy.png（Q-learning 策略）
+* sarsa_policy.png（SARSA 策略）
 
-
-```
