@@ -67,9 +67,6 @@
 ## 1️⃣ 學習表現（Learning Curve）
 
 輸出圖：
-<img width="1400" height="400" alt="sarsa_policy" src="https://github.com/user-attachments/assets/488723c8-5eb3-474d-bb4d-5ee1f9ee2dca" />
-<img width="1400" height="400" alt="q_policy" src="https://github.com/user-attachments/assets/38f38112-b432-47ae-86b7-c38b36564980" />
-<img width="1400" height="400" alt="q_policy" src="https://github.com/user-attachments/assets/e5f47344-81bb-4a63-bfce-cab8c72f05bc" />
 <img width="1000" height="600" alt="learning_curve" src="https://github.com/user-attachments/assets/0c89ccf1-e055-4c81-bad0-0a85f8dadd23" />
 
 ```
