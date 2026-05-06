@@ -51,10 +51,8 @@ class CliffWalkingEnv:
 # ======================
 # Base Agent
 # ======================
-class BaseAgent:
-    def __init__(self, rows, cols, actions,
-                 alpha=0.1, gamma=0.9, epsilon=0.1):
-
+class QLearningAgent:
+    def __init__(self, rows, cols, actions, alpha=0.1, gamma=0.9, epsilon=0.1):
         self.q = np.zeros((rows, cols, actions))
         self.alpha = alpha
         self.gamma = gamma
@@ -62,17 +60,11 @@ class BaseAgent:
         self.actions = actions
 
     def choose_action(self, state):
+        r, c = state
         if random.random() < self.epsilon:
             return random.randint(0, self.actions - 1)
-        else:
-            r, c = state
-            return np.argmax(self.q[r, c])
+        return np.argmax(self.q[r, c])
 
-
-# ======================
-# Q-Learning
-# ======================
-class QLearningAgent(BaseAgent):
     def update(self, state, action, reward, next_state):
         r, c = state
         nr, nc = next_state
@@ -83,11 +75,20 @@ class QLearningAgent(BaseAgent):
             reward + self.gamma * best_next - self.q[r, c, action]
         )
 
+class SARSAAgent:
+    def __init__(self, rows, cols, actions, alpha=0.1, gamma=0.9, epsilon=0.1):
+        self.q = np.zeros((rows, cols, actions))
+        self.alpha = alpha
+        self.gamma = gamma
+        self.epsilon = epsilon
+        self.actions = actions
 
-# ======================
-# SARSA
-# ======================
-class SARSAAgent(BaseAgent):
+    def choose_action(self, state):
+        r, c = state
+        if random.random() < self.epsilon:
+            return random.randint(0, self.actions - 1)
+        return np.argmax(self.q[r, c])
+
     def update(self, state, action, reward, next_state, next_action):
         r, c = state
         nr, nc = next_state
@@ -96,8 +97,6 @@ class SARSAAgent(BaseAgent):
             reward + self.gamma * self.q[nr, nc, next_action]
             - self.q[r, c, action]
         )
-
-
 # ======================
 # Training
 # ======================
