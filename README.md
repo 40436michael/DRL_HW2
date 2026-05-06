@@ -1,7 +1,7 @@
 
 
 # 📌 Cliff Walking：Q-learning vs SARSA
-
+對話紀錄放在 Cliff Walking 強化學習比較
 ## 一、實驗目的
 
 本實驗比較兩種強化學習方法在 Cliff Walking 環境中的表現：
