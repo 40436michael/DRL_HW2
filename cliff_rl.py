@@ -2,6 +2,8 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
+random.seed(0)
+np.random.seed(0)
 # ======================
 # Environment
 # ======================
@@ -181,7 +183,7 @@ def plot_learning_curves(q_rewards, sarsa_rewards):
     plt.legend()
     plt.grid()
     plt.ylim([-200, 0]) 
-    plt.savefig("learning_curve.png")
+    plt.savefig("cliff.png")
     plt.show()
 
 
@@ -319,11 +321,11 @@ if __name__ == "__main__":
 
 
     # ===== 5️⃣ 畫圖 =====
-    visualize_policy(q_policy, "Q-learning Policy", "q_policy.png", q_path)
-    visualize_policy(sarsa_policy, "SARSA Policy", "sarsa_policy.png", sarsa_path)
+    visualize_policy(q_policy, "Q-learning Policy", "q_learning.png", q_path)
+    visualize_policy(sarsa_policy, "SARSA Policy", "sarsa.png", sarsa_path)
 
 
     print("Done! 已輸出圖片：")
-    print("- learning_curve.png")
-    print("- q_policy.png")
-    print("- sarsa_policy.png")
+    print("- cliff.png")
+    print("- q_learning.png")
+    print("- sarsa.png")
